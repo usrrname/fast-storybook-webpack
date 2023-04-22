@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "esModuleInterop": true,
+    "strictNullChecks": true,
+    "moduleResolution": "nodenext",
+    "stripInternal": true,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "outDir": "dist/esm",
+    "declarationDir": "dist/dts",
+    "experimentalDecorators": true,
+    "noImplicitAny": false,
+    "strictPropertyInitialization": false,
+    "importsNotUsedAsValues": "error",
+    "target": "es2015",
+    "module": "ESNext",
+    "importHelpers": true,
+    "types": [
+      "node"
+    ],
+    "lib": [
+      "DOM",
+      "ES2015",
+      "ES2016.Array.Include"
+    ],
+    "declarationMap": true,
+    "sourceMap": true,
+    "noEmitOnError": true,
+    "strict": true,
+    "rootDir": "src"
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}
