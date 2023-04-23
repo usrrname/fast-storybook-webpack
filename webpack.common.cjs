@@ -8,6 +8,7 @@ module.exports = {
   name: 'root',
   entry: {
     tooltip: path.resolve('./src/components/tooltip/define.js'),
+    button: path.resolve('./src/components/button/define.js'),
   },
   resolve: {
     extensions: ['.ts', '.js', '.svg'],

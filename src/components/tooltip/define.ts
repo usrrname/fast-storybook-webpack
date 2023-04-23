@@ -1,3 +1,7 @@
-import { Tooltip } from './tooltip.ts';
+import { tooltipTemplate } from '@microsoft/fast-foundation';
+import { Tooltip } from './tooltip.js';
 
-Tooltip.define({ name: 'fast-tooltip' });
+export default Tooltip.define({
+  name: 'fast-tooltip',
+  template: tooltipTemplate()
+});
