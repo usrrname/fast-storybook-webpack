@@ -1,8 +1,11 @@
 const path = require('path');
+/** @type { import('resolve-typescript-plugin') } */
+const ResolveTypescriptPlugin = require('resolve-typescript-plugin');
 
 /** @type { import('@storybook/html-webpack5').StorybookConfig } */
 module.exports = {
-  stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|ts|mdx)"],
+  logLevel: 'debug',
+  stories: ["../src/**/*.stories.@(js|ts|mdx)"],
   addons: [
     "@storybook/addon-essentials",
     "@storybook/addon-actions",
@@ -38,7 +41,22 @@ module.exports = {
             transpileOnly: true,
         },
     },
+    {
+      test: /\.m?js$/,
+      enforce: "pre",
+      loader: require.resolve("source-map-loader"),
+      resolve: {
+          fullySpecified: false,
+      },
+    },
     ]
+    config.resolve.plugins = [
+      ...(config.resolve.plugins ?? []),
+      new ResolveTypescriptPlugin({
+          includeNodeModules: true,
+      }),
+    ];
+
     return config;
   },
 };

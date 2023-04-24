@@ -86,7 +86,7 @@ export type StoryArgs<TArgs = Args> = Partial<Omit<TArgs, keyof FASTElement>>;
  * Renders a ViewTemplate as elements in a DocumentFragment.
  * Bindings, such as event binding, will be active.
  */
-const renderViewTemplate = <TSource>(
+export const renderViewTemplate = <TSource>(
   viewTemplate: ViewTemplate<TSource>,
   source: TSource
 ): DocumentFragment => {
