@@ -25,8 +25,9 @@
     "start": "npx http-server",
     "dev": "webpack serve --open --config webpack.dev.cjs --history-api-fallback --progress",
     "build": "webpack --config webpack.prod.cjs",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "sb": "storybook dev -p 6006",
+    "build:sb": "storybook build",
+    "serve:sb": "cd storybbok-static && npx http-server "
   },
   "dependencies": {
     "@microsoft/fast-element": "^2.0.0-beta.1",

@@ -40,6 +40,11 @@ export declare type Story<TArgs = Args> = StoryObj<TArgs>;
  */
 export declare type StoryArgs<TArgs = Args> = Partial<Omit<TArgs, keyof FASTElement>>;
 /**
+ * Renders a ViewTemplate as elements in a DocumentFragment.
+ * Bindings, such as event binding, will be active.
+ */
+export declare const renderViewTemplate: <TSource>(viewTemplate: ViewTemplate<TSource, any>, source: TSource) => DocumentFragment;
+/**
  *  Renders a FAST `html` template as a story.
  */
 export declare const createStory: <TSource>(viewTemplate: ViewTemplate<TSource, any>) => (source: TSource) => Element;
