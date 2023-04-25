@@ -1,11 +1,11 @@
 const { merge } = require('webpack-merge');
-const config = require('./webpack.common.cjs');
+const Common = require('./webpack.common.cjs')
 
-module.exports = merge(config, {
+module.exports = merge(Common, {
   mode: 'development',
   devServer: {
     open: true,
-    port: 3000,
+    port: 3001,
     hot: true,
     historyApiFallback: true,
   },

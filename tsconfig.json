@@ -2,35 +2,41 @@
   "compilerOptions": {
     "declaration": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "strictNullChecks": true,
+    "moduleResolution": "nodenext",
+    "stripInternal": true,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
     "outDir": "dist/esm",
-    "strict": true,
+    "declarationDir": "dist/dts",
     "experimentalDecorators": true,
-    "target": "ES2020",
-    "module": "ES2020",
-    "allowJs": true,
+    "noImplicitAny": false,
+    "strictPropertyInitialization": false,
+    "importsNotUsedAsValues": "error",
+    "target": "es2015",
+    "module": "ESNext",
     "importHelpers": true,
-    "resolveJsonModule": true,
-    "sourceMap": true,
+    "types": [
+      "node"
+    ],
     "lib": [
       "DOM",
       "ES2015",
-      "ES2016.Array.Include",
-      "ES2017.Object"
+      "ES2016.Array.Include"
     ],
-    // Whitelist imported @types instead of using them all
-    "types": [
-      "webpack-env",
-      "@storybook/types"
-    ],
-    // Require type only imports where possible
-    // so imports with side-effects are explicit
-    "importsNotUsedAsValues": "error",
-    "noImplicitOverride": true,
-    "noUncheckedIndexedAccess": true,
-    "noPropertyAccessFromIndexSignature": false
+    "paths": {
+      "react/*": [
+        "./src/react-components"
+      ]
+    }
   },
   "include": [
-    "src"
+    "./src/**/*",
+    "src/typings.d.ts"
+  ],
+  "exclude": [
+    "src/**/*.pw.spec.ts",
+    "src/**/*.stories.ts",
+    "src/styles/**"
   ]
 }

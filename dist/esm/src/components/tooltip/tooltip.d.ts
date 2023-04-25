@@ -1,3 +1,3 @@
 import { FASTTooltip } from '@microsoft/fast-foundation';
-
-export class Tooltip extends FASTTooltip {}
+export declare class Tooltip extends FASTTooltip {
+}

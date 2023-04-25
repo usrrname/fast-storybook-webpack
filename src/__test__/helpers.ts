@@ -1,13 +1,14 @@
-import { html, FASTElement, ViewTemplate } from "@microsoft/fast-element";
 import type {
   AnnotatedStoryFn,
   Args,
   ComponentAnnotations,
   StoryAnnotations,
-  Renderer,
+  Renderer
 } from "@storybook/types";
 import qs from "qs";
-import type { HtmlRenderer, StoryObj as SbStoryObj } from '@storybook/html'
+import type { HtmlRenderer, StoryContext } from '@storybook/html'
+import type { FASTElement, ViewTemplate } from "@microsoft/fast-element";
+import type { Maybe } from "./global.js";
 /**
  * Returns a formatted URL for a given Storybook fixture.
  *
@@ -45,9 +46,10 @@ export function fixtureURL(
  * A helper that returns a function to bind a Storybook story to a ViewTemplate.
  */
 export type FASTFramework = {
-  component: typeof FASTElement | HtmlRenderer['component'];
+  component: typeof FASTElement | HtmlRenderer['component'] | ViewTemplate<any, any>;
   storyResult: FASTElement | Element | DocumentFragment | HtmlRenderer['storyResult'];
   canvasElement: Renderer['canvasElement'] | HTMLCanvasElement;
+  T?: any;
 };
 
 /**
@@ -56,12 +58,12 @@ export type FASTFramework = {
 export type Meta<TArgs = Args> = ComponentAnnotations<
   FASTFramework,
   Omit<TArgs, keyof FASTElement>
->;
+>
 
 /**
  * Story function that represents a CSFv3 component example.
  */
-export declare type StoryObj<TArgs = Args> = StoryAnnotations<FASTFramework, TArgs> & SbStoryObj;
+export declare type StoryObj<TArgs = Args> = StoryAnnotations<FASTFramework, TArgs>;
 
 /**
  * Story function that represents a CSFv2 component example.
@@ -69,28 +71,49 @@ export declare type StoryObj<TArgs = Args> = StoryAnnotations<FASTFramework, TAr
 export declare type StoryFn<TArgs = Args> = AnnotatedStoryFn<FASTFramework, TArgs>;
 
 /**
+ * Combined Storybook story args.
+ */
+export type StoryArgs<TArgs = Args> = Partial<Omit<TArgs, keyof FASTElement>> & Args;
+/**
  * Story function that represents a CSFv2 component example.
  *
  * NOTE that in Storybook 7.0, this type will be renamed to `StoryFn` and replaced by the current `StoryObj` type.
  */
-export declare type Story<TArgs = Args> = StoryObj<TArgs>;
+export declare type Story<TArgs = Args> = StoryFn<StoryArgs<TArgs>>;
 
 /**
- * Combined Storybook story args.
+ * A helper that returns a function to bind a Storybook story to a ViewTemplate.
+ *
+ * @param template - The ViewTemplate to render
+ * @returns - a function to bind a Storybook story
+ *  (args: TArgs, context: Addon_StoryContext) => StoryFnReturnType;
  */
-export type StoryArgs<TArgs = Args> = Partial<Omit<TArgs, keyof FASTElement>>;
+export function renderComponent<TArgs = Args>(
+  template: ViewTemplate
+): (args: TArgs, context: StoryContext) => Element | DocumentFragment | null {
+  return function (args, { updateArgs }) {
+    const storyFragment = new DocumentFragment();
+    template.render({ ...args, updateArgs }, storyFragment);
+    if (storyFragment.childElementCount === 1) {
+      return storyFragment.firstElementChild;
+    }
+    return storyFragment;
+  };
+}
 
-// source: https://github.com/ni/nimble/blob/main/packages/nimble-components/src/utilities/tests/storybook.ts
+
+/** source: https://github.com/ni/nimble/blob/main/packages/nimble-components/src/utilities/tests/storybook.ts */
 
 /**
  * Renders a ViewTemplate as elements in a DocumentFragment.
  * Bindings, such as event binding, will be active.
  */
-export const renderViewTemplate = <TSource>(
-  viewTemplate: ViewTemplate<TSource>,
-  source: TSource
+export const renderViewTemplate = <TArgs>(
+  viewTemplate: ViewTemplate<TArgs>,
+  source: TArgs
 ): DocumentFragment => {
   const template = document.createElement('template');
+
   const fragment = template.content;
   viewTemplate.render(source, fragment);
   return fragment;
@@ -98,16 +121,18 @@ export const renderViewTemplate = <TSource>(
 
 /**
  *  Renders a FAST `html` template as a story.
+ * ArgsStoryFn<TRenderer, TArgs>
  */
-export const createStory = <TSource>(
+export const createStory = <TSource = StoryArgs>(
   viewTemplate: ViewTemplate<TSource>
 ): ((source: TSource) => Element) => {
   return (source: TSource): Element => {
-    const wrappedViewTemplate = html<TSource>`
-            <div class="code-hide-top-container">${viewTemplate}</div>
-        `;
-    const fragment = renderViewTemplate(wrappedViewTemplate, source);
+    const fragment = renderViewTemplate(viewTemplate, source);
     const content = fragment.firstElementChild!;
     return content;
   };
 };
+
+export function convertToMaybe<T extends unknown>(value: T): Maybe<T> {
+  return value ?? undefined;
+}
